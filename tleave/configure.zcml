@@ -17,6 +17,7 @@
     path="import"
     name="import_schedule"
     view=".views.import_schedule"
+    permission="add"
     view_renderer="templates/mytemplate.pt"
     />
 
@@ -26,6 +27,14 @@
     view=".views.index"
     view_renderer="templates/station.pt"
     />
+
+<route
+  path="stationlist"
+  name="sationlist"
+  view=".views.stationlist"
+  renderer="json"
+  />
+
   <static
     name="static"
     path="templates/static"

@@ -18,6 +18,9 @@ from sqlalchemy.orm import mapper
 from sqlalchemy.orm import relation, backref 
 
 from zope.sqlalchemy import ZopeTransactionExtension
+from repoze.lru import lru_cache
+
+
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
@@ -65,12 +68,14 @@ class TimeTable (object):
     def __init__(self, time):
         self.time = time
 
-        def __repr__(self):
-            try:
-                time ='         ' + self.time.strftime('%I:%M %p')
-            except AttributeError:
-                time = '  No Train  '    
-            return timezo
+    @lru_cache(1000)
+    def __repr__(self):
+        """get a default formatted time string"""
+        try:
+            time ='         ' + self.time.strftime('%I:%M %p')
+        except AttributeError:
+            time = '  No Train  '    
+        return time
 
 timetable = Table(
         'timetable',

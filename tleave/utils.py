@@ -10,6 +10,21 @@ from teastrainer import getSchedule
 from tleave import models
 from tleave.models import DBSession
 
+from beaker.cache import CacheManager
+from beaker.util import parse_cache_config_options
+
+from repoze.lru import lru_cache
+
+
+cache_opts = {
+    'cache.type': 'file',
+    'cache.data_dir': '/tmp/cache/data',
+    'cache.lock_dir': '/tmp/cache/lock'
+}
+
+cache = CacheManager(**parse_cache_config_options(cache_opts))
+
+
 ROUTES = ['FAIRMNT', 'FITCHBRG', 'NBRYROCK','WORCSTER','FRANKLIN',\
          'GREENBSH','HAVRHILL', 'OLCOLONY'\
          ,'LOWELL','NEEDHAM', 'PROVSTOU']
@@ -118,6 +133,7 @@ def parseToDateTime(timetable):
     return datetimetable
             
 
+@lru_cache(500)
 def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
     """ """
     #needs logic for weekend time and direction
@@ -170,6 +186,7 @@ def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
     return results
     
     
+@cache.cache('determine_direction_results', expire=3600)
 def determineDirection(stationStart,stationEnd, route): 
     """determines the direction of travel based on start and end station""" 
     start = DBSession.query(models.Station).filter(models.Station.stationname==stationStart).filter(models.Station.route==route).filter(models.Station.direction=='I')

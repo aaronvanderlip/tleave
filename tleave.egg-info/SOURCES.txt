@@ -4,7 +4,9 @@ setup.py
 tleave/__init__.py
 tleave/models.py
 tleave/run.py
+tleave/teastrainer.py
 tleave/tests.py
+tleave/utils.py
 tleave/views.py
 tleave.egg-info/PKG-INFO
 tleave.egg-info/SOURCES.txt
