@@ -7,13 +7,6 @@
     handler=".run.handle_teardown"/>
 
   <route 
-    path=""
-    name="home"
-    view=".views.my_view"
-    view_renderer="templates/mytemplate.pt"
-    />
-
-  <route 
     path="import"
     name="import_schedule"
     view=".views.import_schedule"
@@ -22,7 +15,7 @@
     />
 
   <route 
-    path="station"
+    path=""
     name="station"
     view=".views.index"
     view_renderer="templates/station.pt"

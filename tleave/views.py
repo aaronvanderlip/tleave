@@ -14,11 +14,17 @@ def my_view(request):
 
 def import_schedule(request):
     importAllSchedules()
-    return HTTPFound(location = route_url('import_schedule', request, pagename='FrontPage'))
+    return HTTPFound(location = route_url('/', request, pagename='FrontPage'))
 
 def index(request,route='NBRYROCK',stationStart='North Station', stationEnd='Salem',direction='I',timing='W',debug='False'):
     """Handle the front-page."""    
-    timing = getTiming()   
+
+    if 'form.submitted' in request.params:
+        route = request.params['route']
+        stationStart = request.params['stationStart']
+        stationEnd = request.params['stationEnd']
+    
+    timing = getTiming()    
     station = DBSession.query(Station).filter(Station.route==route).filter(Station.direction==direction).filter(Station.timing==timing).order_by(Station.routeorder)
     direction = determineDirection(stationStart,stationEnd,route)
     nexttrain=nextTrain(stationStart,stationEnd,route,timing, direction)
@@ -30,6 +36,8 @@ def index(request,route='NBRYROCK',stationStart='North Station', stationEnd='Sal
 def stationlist(request,route='NBRYROCK',direction='O',sortorder='O'):
     """Handle the front-page."""
     route = request.params['route']
+    sortorder = request.params['sortorder']
+
     stations = DBSession.query(Station).filter(Station.route==route).filter(Station.direction==direction).order_by(Station.routeorder)
     #gahh do i have to build a string here?  need better ajax widget that can comprehend lists
     stationlist = [ station.stationname for station in stations]

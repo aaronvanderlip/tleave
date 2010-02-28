@@ -86,7 +86,7 @@ timetable = Table(
         )
 
 models_mapper = mapper(TimeTable,timetable,properties={    
-    'station':relation(Station, backref='timetable', cascade="all, delete, delete-orphan")
+    'station':relation(Station, backref='timetable', order_by='id')
     }    )
 def populate():
     session = DBSession()
