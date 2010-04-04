@@ -1,3 +1,0 @@
-      [paste.app_factory]
-      app = tleave.run:app
-      
