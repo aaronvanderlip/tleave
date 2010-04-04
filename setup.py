@@ -13,14 +13,13 @@ requires = [
     'transaction',
     'repoze.tm2',
     'zope.sqlalchemy',
-    'formish'
     ]
 
 if sys.version_info[:3] < (2,5,0):
     requires.append('pysqlite')
 
 setup(name='tleave',
-      version='0.0',
+      version='0.1',
       description='tleave',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[

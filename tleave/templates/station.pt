@@ -14,28 +14,23 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
   $(function(){
     $('#route').change(function(){
       selectedroute = $('#route :selected').val();
-      $.get('${request.application_url}/stationlist',
-    {sortorder:'O',route:selectedroute},
-      function(data){
-        updateStationList(data);
-      })
+        updateStationList(selectedroute);
     })
   }
   ) 
 
   $(function(){
+    if ( ! $('#stationStart:selected')){
     $(document).ready(function(){
       selectedroute = $('#route :selected').val();
-      $.get( '${request.application_url}/stationlist',
-    {route:selectedroute},
-      function(data){
-        updateStationList(data);
-      })
+        updateStationList(selectedroute);
     })
   }
-  ) 
+}
+  )
+   
 
-  function updateStationList(data){  
+  function updateStationList(selectedroute){  
     $("#stationStart").removeOption(/./);          
     $("#stationStart").ajaxAddOption('${request.application_url}/stationlist',
   {sortorder:'O', route:selectedroute});
@@ -70,14 +65,16 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
       <label> destination </label>
       <br />
       <select name="stationEnd" id="stationEnd">
-        <option tal:repeat="item routes" tal:attributes="value python: item[1]; selected python:item[1] == stationEnd" tal:content="python: item[1] "> </option>
+        <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationEnd" tal:content="python: item.stationname"> </option>
       </select>
       <br />
       <br />
       <input type="submit" name="form.submitted" value="show trains"/>
     </form>
+
+
     <table class='traintimes' tal:condtion="python: len(nexttrain) > 0">
-      <thead><tr><th>Leaves <br/> <span class="stationHeader" tal:content="stationStart"></span></th><th>Arrives <br /> <span class="stationHeader" tal:content="stationEnd"></span></th></tr></thead>
+      <thead tal:condition="python: len(nexttrain) >0"><tr><th>Leaves <br/> <span class="stationHeader" tal:content="stationStart"></span></th><th>Arrives <br /> <span class="stationHeader" tal:content="stationEnd"></span></th></tr></thead>
       <tbody>
         <tr tal:repeat="times in nexttrain">
           <td> <span tal:content="python: times[0]">Page text goes here.</span>
@@ -85,6 +82,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
         </tr>
       </tbody>
     </table>
+    <h1 tal:condition="python: len(nexttrain) is 0">No trains for seleced route</h1>
     <!-- end content -->
     <div style="clear: both;">&nbsp;</div>
   </div>
