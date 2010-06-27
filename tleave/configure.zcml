@@ -12,7 +12,7 @@
     view=".views.import_schedule"
     permission="add"
     view_renderer="templates/mytemplate.pt"
-    />
+    /> 
 
   <route 
     path=""

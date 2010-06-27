@@ -44,7 +44,7 @@ LOG = logging.getLogger(__name__)
 
 ##fix me
 from sqlalchemy import MetaData
-db_string = 'sqlite:////Users/aaron/PROJECTS/tleave/tleave.db'
+db_string = 'sqlite://///home2/ruralmind/webapps/tleave/tleave//tleave.db'
 metadata = MetaData()
 
 def importAllSchedules():
