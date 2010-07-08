@@ -1,0 +1,36 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+
+  <!-- this must be included for the view declarations to work -->
+  <include package="repoze.bfg.includes" />
+
+  <subscriber for="repoze.bfg.interfaces.INewRequest"
+    handler=".run.handle_teardown"/>
+
+  <route 
+    path="import"
+    name="import_schedule"
+    view=".views.import_schedule"
+    permission="add"
+    view_renderer="templates/mytemplate.pt"
+    /> 
+
+  <route 
+    path=""
+    name="station"
+    view=".views.index"
+    view_renderer="templates/station.pt"
+    />
+
+<route
+  path="stationlist"
+  name="sationlist"
+  view=".views.stationlist"
+  renderer="json"
+  />
+
+  <static
+    name="static"
+    path="templates/static"
+    />
+
+</configure>
