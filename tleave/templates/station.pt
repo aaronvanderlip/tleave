@@ -92,6 +92,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
     <div style="clear: both;">&nbsp;</div>
   </div>
   <p> built on <a href="http://bfg.repoze.org/">repoze.bfg</a></p>
+  <p> by <a href="http://avanderlip.com">avanderlip.com</a></p>
 </div>
 <script type="text/javascript">
 
