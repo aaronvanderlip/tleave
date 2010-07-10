@@ -44,11 +44,11 @@ LOG = logging.getLogger(__name__)
 
 ##fix me
 from sqlalchemy import MetaData
-db_string = 'sqlite://///home2/ruralmind/webapps/tleave/tleave//tleave.db'
+db_string = 'sqlite://///home2/ruralmind/webapps/tleave_wsgi/htdocs//tleave.db'
 metadata = MetaData()
 
 def importAllSchedules():
-    print "Dropping tables"
+    #print "Dropping tables"
     #repeating ourselves
     engine = create_engine(db_string)
     DBSession.configure(bind=engine)
@@ -75,7 +75,7 @@ def importSchedule(route, direction, timing):
     """this should go in another library, but its purpose
        is to populate the database"""
     
-    print "Creating tables"
+    #print "Creating tables"
 
     engine = create_engine(db_string)
     DBSession.configure(bind=engine)
