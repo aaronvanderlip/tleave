@@ -21,6 +21,12 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
         selectedroute = $('#route :selected').val();
         updateStationList(selectedroute);
       })
+
+      $('#timing').change(function(){
+        timing = $('#timing :selected').val();
+        $('#station_search').submit();
+      })
+
     }
     ) 
 
@@ -59,24 +65,35 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
     <div id="content">
     </div>
     <h2> an alternative MBTA commuter train schedule</h2>
-    <form action="/" method="get">
-      <h3>choose route</h3>
+    <form action="/" method="get" id="station_search">
+      <label> choose route </label>
+      <input type="hidden" name="form.submitted" value="true" />
       <select name="route" id="route">
         <option tal:repeat="item routes" tal:attributes="value python: item[0]; selected python: item[0] == selectedroute" tal:content="python: item[1] "> </option>
       </select>
       <br />
+      <br />
+      <label> current stop </label>
       <select name="stationStart" id="stationStart">
         <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationStart" tal:content="python: item.stationname"> </option>
       </select>
-      <label> current stop </label>
       <br />
+      <br />
+      <label> destination </label>
       <select name="stationEnd" id="stationEnd">
         <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationEnd" tal:content="python: item.stationname"> </option>
       </select>
-      <label> destination </label>
       <br />
       <br />
-      <input type="submit" name="form.submitted" value="show trains"/>
+      <label> day of the week </label>
+      <select name="timing" id="timing">
+        <option value="S" tal:attributes="selected python: timing == 'S'">Saturday</option>
+        <option value="U" tal:attributes="selected python: timing == 'U'">Sunday</option>
+        <option value="W" tal:attributes="selected python: timing == 'W'">Weekday</option>
+      </select>
+      <br />
+      <br />
+      <input type="submit"  value="show trains"/>
     </form>
 
     <table class='traintimes' tal:condtion="python: len(nexttrain) > 0">
