@@ -42,9 +42,8 @@ __all__ = ['setup_app']
 
 LOG = logging.getLogger(__name__)
 
-##fix me
 from sqlalchemy import MetaData
-db_string = 'sqlite://///home2/ruralmind/webapps/tleave_wsgi/htdocs//tleave.db'
+db_string = 'sqlite://///tleave.db'
 metadata = MetaData()
 
 def importAllSchedules():
@@ -141,7 +140,7 @@ def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
     now = datetime(year=1900, month=1, day=1, hour=currenttime.hour, minute=currenttime.minute)
     starttimes =[]
     endtimes = []    
-    timing = getTiming()    
+
     try:
         start = DBSession.query(models.Station).filter(models.Station.stationname==stationStart).filter(models.Station.route==route).filter(models.TimeTable.time > now ).filter(models.Station.direction==direction).filter(models.Station.timing==timing).one()
         end = DBSession.query(models.Station).filter(models.Station.stationname==stationEnd).filter(models.Station.route==route).filter(models.TimeTable.time > now ).filter(models.Station.direction==direction).filter(models.Station.timing==timing).one()
@@ -191,11 +190,15 @@ def determineDirection(stationStart,stationEnd, route):
     """determines the direction of travel based on start and end station""" 
     start = DBSession.query(models.Station).filter(models.Station.stationname==stationStart).filter(models.Station.route==route).filter(models.Station.direction=='I')
     end = DBSession.query(models.Station).filter(models.Station.stationname==stationEnd).filter(models.Station.route==route).filter(models.Station.direction=='I')
-     
-    if start[0].routeorder < end[0].routeorder:
-        return 'I'
+
+
+    if (start.count() and  end.count() != 0):
+        if start[0].routeorder < end[0].routeorder:
+            return 'I'
+        else:
+            return 'O' 
     else:
-        return 'O' 
+        return 'O'
 
 
 def scheduleIntegrity():
