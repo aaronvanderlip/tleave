@@ -14,8 +14,6 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
   var empty_request = ${len(request.params)} == 0; 
 
-
-
     $(function(){
       $('#route').change(function(){
         selectedroute = $('#route :selected').val();
@@ -55,7 +53,9 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
 <!-- start header -->
 <div id="logo">
-  <img src="${request.application_url}/static/images/tleave.gif" alt="tleave: Find your next train" />
+  <a href="http://tleave.com">
+    <img src="${request.application_url}/static/images/tleave.gif" alt="tleave: Find your next train" />
+  </a>
 </div>
 <!-- end header -->
 <div id="wrapper">
@@ -65,7 +65,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
     <div id="content">
     </div>
     <h2> an alternative MBTA commuter train schedule</h2>
-    <form action="/" method="get" id="station_search">
+    <form action="" method="get" id="station_search">
       <label> choose route </label>
       <input type="hidden" name="form.submitted" value="true" />
       <select name="route" id="route">
@@ -96,6 +96,12 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
       <input type="submit"  value="show trains"/>
     </form>
 
+    <br />
+    <br />
+    <div tal:condition="alerts">  
+      <h4>current service alerts</h4>
+      <p id="alerts" tal:content="structure alerts"></p>
+    </div>
     <table class='traintimes' tal:condtion="python: len(nexttrain) > 0">
       <thead tal:condition="python: len(nexttrain) >0"><tr><th>Leaves <br/> <span class="stationHeader" tal:content="stationStart"></span></th><th>Arrives <br /> <span class="stationHeader" tal:content="stationEnd"></span></th></tr></thead>
       <tbody>

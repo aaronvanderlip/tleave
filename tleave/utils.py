@@ -13,6 +13,7 @@ from tleave.models import DBSession
 from beaker.cache import CacheManager
 from beaker.util import parse_cache_config_options
 
+import feedparser
 from repoze.lru import lru_cache
 
 
@@ -35,6 +36,12 @@ FRIENDLYROUTES = {'FAIRMNT':'Fairmount', 'FITCHBRG':'Fitchburg',\
                   'HAVRHILL':'Haverhill','OLCOLONY':'Kingston/Plymouth',\
                   'LOWELL':'Lowell',\
                   'NEEDHAM':'Needham','PROVSTOU':'Providence/Stoughton'}
+
+
+FEEDS = {'FAIRMNT':1, 'FITCHBRG':2, 'NBRYROCK':11,'WORCSTER':4,'FRANKLIN':5,\
+        'GREENBSH':232,'HAVRHILL':7, 'OLCOLONY':12\
+        ,'LOWELL':8,'NEEDHAM':10, 'PROVSTOU':14}
+
 DIRECTIONS = ['O', 'I']
 TIMING = ['W', 'S', 'U']
 
@@ -59,6 +66,21 @@ def importAllSchedules():
         for direction in DIRECTIONS:
             for timing in TIMING:
                 importSchedule(route,direction,timing)
+
+
+@cache.cache('service_alerts', expire=300)
+def get_alerts(route):
+    
+    feed =  'http://talerts.com/rssfeed/alertsrss.aspx?%s' % route
+    parser = feedparser.parse(feed)
+    try:
+       results = parser['entries'][0].summary_detail['value']
+
+    except IndexError:
+       results = None 
+
+    finally:
+       return results       
 
 def getTiming():
     currenttime = datetime.now()     
