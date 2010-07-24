@@ -3,7 +3,7 @@ from tleave.models import Model
 from webob.exc import HTTPFound
 from repoze.bfg.url import route_url
 from repoze.bfg.view import bfg_view
-from tleave.utils import importAllSchedules, nextTrain, getTiming, determineDirection, FRIENDLYROUTES
+from tleave.utils import importAllSchedules, nextTrain, getTiming, determineDirection,get_alerts, FRIENDLYROUTES,FEEDS
 from tleave.models import Station
 
 def my_view(request):
@@ -18,9 +18,7 @@ def import_schedule(request):
 
 
 
-
-
-def index(request,route='NBRYROCK',stationStart='North Station', stationEnd='Salem',direction='I',timing='W',debug='False'):
+def index(request,route='NBRYROCK',stationStart='North Station', stationEnd='Salem',direction='I',timing='W',feed=11,debug='False'):
     """Handle the front-page."""    
 
 
@@ -29,6 +27,7 @@ def index(request,route='NBRYROCK',stationStart='North Station', stationEnd='Sal
         stationStart = request.params['stationStart']
         stationEnd = request.params['stationEnd']
         timing = request.params['timing']
+        feed = FEEDS[request.params['route']]
     else:   
         timing = getTiming()    
 
@@ -36,7 +35,7 @@ def index(request,route='NBRYROCK',stationStart='North Station', stationEnd='Sal
     direction = determineDirection(stationStart,stationEnd,route)
     nexttrain=nextTrain(stationStart,stationEnd,route,timing, direction)
     #had to convert FRIENDLYROUTES to a list of tuples, not sure why you can't pass a dict
-    return dict(project='tLeave',stationpages=station,routes=FRIENDLYROUTES.items(),nexttrain=nexttrain, selectedroute=route, stationStart=stationStart, stationEnd=stationEnd,debug=debug, direction=direction, timing=timing)    
+    return dict(project='tLeave',stationpages=station,routes=FRIENDLYROUTES.items(),nexttrain=nexttrain, selectedroute=route, stationStart=stationStart, stationEnd=stationEnd,debug=debug, direction=direction, timing=timing, alerts=get_alerts(feed))    
 
 
 @bfg_view(renderer='json')

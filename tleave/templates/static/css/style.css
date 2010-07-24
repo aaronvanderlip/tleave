@@ -35,6 +35,10 @@ h1 {
    font-size: 18px;
  }
 
+ h4  {
+   font-size: 14px;
+   font-weight:bold;
+ }
  p, ol{margin:1em;}
 
  ol li{list-style-type:inherit; margin-left:2em;}
