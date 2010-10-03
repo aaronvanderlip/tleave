@@ -1,5 +1,5 @@
 body{
-  width:90%;
+  width:300px;
   padding-left:10px;
   text-align:left;
 }
@@ -26,7 +26,7 @@ h1 {
  }
 
  h2  {
-   font-size: 3em;
+   font-size: 24px;
    margin: 1em;	
  }
 
@@ -36,7 +36,7 @@ h1 {
  }
 
  h4  {
-   font-size: 2em;
+   font-size: 14px;
    font-weight:bold;
  }
  p, ol{margin:1em;}
@@ -45,7 +45,8 @@ h1 {
 
  #stationStart, #stationEnd, #route{
    width:15em;
-       margin: 0 0 2.5em;
+   margin: 0px;
+   margin-top:10px;
 }
 
 #mainmenu{
@@ -62,11 +63,11 @@ h1 {
 #topsection{margin:auto; 
 
   font-size: 150%;
-  width:90%;}
+  width:260px;}
 
 td {padding: .5em;
   text-align: center;
-  font-size: 2.3em;
+  font-size: 16px;
 }
 
 
@@ -81,12 +82,13 @@ table.traintimes{
 
 
   margin-top:1.5em;
-  width:90%;
+  width:260px;
   border:1px solid black;}
 
 .stationHeader{
   color: red;
   font-weight:bold;
+  font-size: 12px;
   margin-left: .25em;
 }
 
@@ -94,7 +96,7 @@ table.traintimes tr{
   border: 1px solid grey;} 
 
 .traintimes th{text-align:center;
-  font-size: 2em;
+  font-size: 12px;
 
 
 }
@@ -116,20 +118,10 @@ table.traintimes tr{
 label{
   font-weight:bold;
   text-align: center;
-  font-size: 2em;
+  font-size: 12px;
 
 }
-select, input, button, textarea, button {
-      font: 2em arial,helvetica,clean,sans-serif;
-    }
-
-
-
 
 #routeSelector input{
   margin-top:1.5em;
-}
-
-#alerts{
-  font-size:2em;
 }
