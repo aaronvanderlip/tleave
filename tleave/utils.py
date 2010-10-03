@@ -50,7 +50,7 @@ __all__ = ['setup_app']
 LOG = logging.getLogger(__name__)
 
 from sqlalchemy import MetaData
-db_string = 'sqlite://///tleave.db'
+db_string = 'sqlite:////home2/ruralmind/webapps/tleave_wsgi/htdocs/tleave.db'
 metadata = MetaData()
 
 def importAllSchedules():
@@ -190,8 +190,9 @@ def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
     # this creates a list of positional indexes for times in the time tables
     # if the index position matches, there is a train for that destination, this mimicks the rows in the printed schedule
     # this is essentially equivilant to the train number in the printed scheudle
-    startindexes = [cleanstarts.index(time) for time in starttimes]
-    endindexes = [cleanends.index(time) for time in endtimes]
+    startindexes = [cleanstarts.index(time) for time in starttimes if time != None]
+    endindexes = [cleanends.index(time) for time in endtimes if time != None]
+
 
     s1 = Set(startindexes)
     s2 = Set(endindexes)
@@ -203,7 +204,6 @@ def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
     startTrainTimes = [(start.timetable[n], end.timetable[n]) for n in idlist]
     results = startTrainTimes 
     return results
-    
     
 @cache.cache('determine_direction_results', expire=3600)
 def determineDirection(stationStart,stationEnd, route): 
