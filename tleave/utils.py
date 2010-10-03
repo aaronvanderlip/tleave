@@ -164,22 +164,20 @@ def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
     endtimes = []    
 
     try:
-        start = DBSession.query(models.Station).filter(models.Station.stationname==stationStart).filter(models.Station.route==route).filter(models.TimeTable.time > now ).filter(models.Station.direction==direction).filter(models.Station.timing==timing).one()
-        end = DBSession.query(models.Station).filter(models.Station.stationname==stationEnd).filter(models.Station.route==route).filter(models.TimeTable.time > now ).filter(models.Station.direction==direction).filter(models.Station.timing==timing).one()
+        start = DBSession.query(models.Station).filter(models.Station.stationname==stationStart).filter(models.Station.route==route).filter(models.Station.direction==direction).filter(models.Station.timing==timing).one()
+        end = DBSession.query(models.Station).filter(models.Station.stationname==stationEnd).filter(models.Station.route==route).filter(models.Station.direction==direction).filter(models.Station.timing==timing).one()
     except NoResultFound:
         return [] 
     
     # find the times the time table looking forward from now 
     for time in start.timetable:
         try: 
-            if time.time > now:
                 starttimes.append(time.time)
         except TypeError:
             pass
     
     for time in end.timetable:
         try: 
-            if time.time > now:
                 endtimes.append(time.time)
         except TypeError:
             pass
