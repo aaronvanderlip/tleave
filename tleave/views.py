@@ -18,7 +18,7 @@ def import_schedule(request):
 
 
 
-def index(request,route='NBRYROCK',stationStart='North Station', stationEnd='Salem',direction='I',timing='W',feed=11,debug='False'):
+def index(request,route='NBRYROCK',stationStart='North Station', stationEnd='Rockport',direction='I',timing='W',feed=11,debug='False'):
     """Handle the front-page."""    
 
 
