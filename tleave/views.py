@@ -1,16 +1,9 @@
 from tleave.models import DBSession
-from tleave.models import Model
 from webob.exc import HTTPFound
 from repoze.bfg.url import route_url
 from repoze.bfg.view import bfg_view
-from tleave.utils import importAllSchedules, nextTrain, getTiming, determineDirection,get_alerts, FRIENDLYROUTES,FEEDS
+from tleave.utils import importAllSchedules, nextTrain, getTiming, determineDirection, get_alerts, FRIENDLYROUTES,FEEDS
 from tleave.models import Station
-
-def my_view(request):
-    dbsession = DBSession()
-    root = dbsession.query(Model).filter(Model.name==u'root').first()
-    return {'root':root, 'project':'tleave'}
-
 
 def import_schedule(request):
     importAllSchedules()

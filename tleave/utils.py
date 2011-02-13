@@ -1,20 +1,24 @@
 from datetime import datetime, timedelta
 from sets import Set
-import logging
 
+import logging
 import transaction
 
+import feedparser
+from beaker.cache import CacheManager
+from beaker.util import parse_cache_config_options
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import create_engine
+
 from teastrainer import getSchedule
 from tleave import models
 from tleave.models import DBSession
 
-from beaker.cache import CacheManager
-from beaker.util import parse_cache_config_options
 
-import feedparser
 from repoze.lru import lru_cache
+import repoze.bfg.settings
+
+settings = repoze.bfg.settings.get_settings()
 
 
 cache_opts = {
@@ -50,7 +54,7 @@ __all__ = ['setup_app']
 LOG = logging.getLogger(__name__)
 
 from sqlalchemy import MetaData
-db_string = 'sqlite:////home2/ruralmind/webapps/tleave_wsgi/htdocs/tleave.db'
+db_string = settings['db_string']
 metadata = MetaData()
 
 def importAllSchedules():
@@ -105,6 +109,7 @@ def importSchedule(route, direction, timing):
     
     schedulelist = getSchedule(route=route, direction=direction, timing=timing)
     if schedulelist is not None:
+        #FIXME it is not really 'time' here is it?
         for name,time in schedulelist.iteritems():
             station = models.Station('','','')
             station.stationname = name
@@ -113,7 +118,7 @@ def importSchedule(route, direction, timing):
             station.direction = direction
             #timing should be replaced with schedule to make consistent
             station.timing = timing 
-            station.timetable = [models.TimeTable(time = stop) for stop in parseToDateTime(time[0])]
+            station.timetable = [models.TimeTable(time = stop['time'], train_num = stop['train_num']) for stop in parseToDateTime(time[0])]
             models.DBSession.add(station)
             transaction.commit()
      
@@ -123,33 +128,35 @@ def parseToDateTime(timetable):
     datetimetable = []
     pm = False
     prev = None
-
     for stop in timetable:
         
         try: 
             #just need the hour to calculate
-            stop = datetime.strptime(stop, '%I:%M')       
+            time = datetime.strptime(stop['time'], '%I:%M')       
             if prev is None:
-                prev = stop 
+                prev = time 
       
             #check to see if the 12 hour mark has been passed
-            if stop < prev and not pm:
+            if time < prev and not pm:
                 pm = True  
                     
             if not pm:
+                stop['time'] = time
                 datetimetable.append(stop)
                      
             else:        
-                stop = stop + timedelta(hours = 12)
+                time = time + timedelta(hours = 12)
                 #check to see if adding 12 hours wraps for trains arriving/leaving the next day
-                if stop < prev:
-                    stop = stop + timedelta(hours = 12)                                    
+                if time < prev:
+                    time = time + timedelta(hours = 12)                                    
+                stop['time'] = time
                 datetimetable.append(stop)
                 
-            prev = stop
+            prev = stop['time']
         #should these be converted to NULL?    
         except ValueError:
-            datetimetable.append(None)
+            stop['time'] = None
+            datetimetable.append(stop)
               
     return datetimetable
             
@@ -172,13 +179,13 @@ def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
     # find the times the time table looking forward from now 
     for time in start.timetable:
         try: 
-                starttimes.append(time.time)
+            starttimes.append(time.time)
         except TypeError:
             pass
     
     for time in end.timetable:
         try: 
-                endtimes.append(time.time)
+            endtimes.append(time.time)
         except TypeError:
             pass
     

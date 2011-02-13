@@ -26,20 +26,6 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 metadata = MetaData()
 
-class Model(object):
-    def __init__(self, name=''):
-        self.name = name
-
-models_table = Table(
-        'models',
-        metadata,
-        Column('id', Integer, primary_key=True),
-        Column('name', Unicode(255), unique=True),
-        )
-
-models_mapper = mapper(Model, models_table)
-
-
 class Station (object):
 
     def __init__(self, stationname, routeorder, direction):
@@ -56,6 +42,7 @@ station_table = Table(
         #need line that it belongs to
         Column('routeorder',Integer),
         Column('stationname',Text),
+        #is this even being used
         Column('route',Text),
         Column('timing',Text, nullable=True),
         Column('direction',Text, nullable=True),
@@ -65,8 +52,9 @@ models_mapper = mapper(Station,station_table)
 
 class TimeTable (object):
 
-    def __init__(self, time):
+    def __init__(self, time, train_num):
         self.time = time
+        self.train_num = train_num 
 
     @lru_cache(1000)
     def __repr__(self):
@@ -81,6 +69,7 @@ timetable = Table(
         'timetable',
         metadata,
         Column('id',Integer, primary_key=True), 
+        Column('train_num',Text), 
         Column('station_id',Integer, ForeignKey('station.id')),
         Column('time',DateTime, nullable=True, default=None),
         )
@@ -88,19 +77,10 @@ timetable = Table(
 models_mapper = mapper(TimeTable,timetable,properties={    
     'station':relation(Station, backref='timetable', order_by='id')
     }    )
-def populate():
-    session = DBSession()
-    model = Model(name=u'root')
-    session.add(model)
-    session.flush()
-    transaction.commit()
 
 def initialize_sql(db_string, echo=False):
     engine = create_engine(db_string, echo=echo)
     DBSession.configure(bind=engine)
     metadata.bind = engine
     metadata.create_all(engine)
-    try:
-        populate()
-    except IntegrityError:
-        pass
+
