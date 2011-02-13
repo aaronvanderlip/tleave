@@ -99,6 +99,10 @@ table.traintimes tr{
 
 }
 
+.trainNumber{
+  font-size: .50em;
+}
+
 #routeSelector{
   margin-top:2em;
   margin-bottom: 2em;

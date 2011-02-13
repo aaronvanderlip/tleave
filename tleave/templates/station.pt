@@ -106,7 +106,11 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
       <thead tal:condition="python: len(nexttrain) >0"><tr><th>Leaves <br/> <span class="stationHeader" tal:content="stationStart"></span></th><th>Arrives <br /> <span class="stationHeader" tal:content="stationEnd"></span></th></tr></thead>
       <tbody>
         <tr tal:repeat="times in nexttrain">
-          <td> <span tal:content="python: times[0]">Page text goes here.</span>
+          <td> 
+            <div class="trainNumber">Train number <span tal:content="python: times[0].train_num">Page text goes here.</span></div>
+            <span tal:content="python: times[0]">Page text goes here.</span>
+
+
           </td><td><span tal:content="python: times[1]">Page text goes here.</span></td>
         </tr>
       </tbody>
