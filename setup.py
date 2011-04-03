@@ -16,7 +16,7 @@ requires = [
     'FeedParser',
     'beaker',
     'BeautifulSoup',
-    'pyramid_zcml'
+    'pyramid_zcml',
     'Chameleon<1.9999'
     ]
 
