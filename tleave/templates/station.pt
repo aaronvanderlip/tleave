@@ -22,7 +22,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
       $('#timing').change(function(){
         timing = $('#timing :selected').val();
-        $('#station_search').submit();
+        setTimeout('$("#station_search").submit()', 800);
       })
 
     }
@@ -45,7 +45,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
       $("#stationEnd").removeOption(/./);          
       $("#stationEnd").ajaxAddOption('${request.application_url}/stationlist',
     {sortorder:'I',route:selectedroute});
-      setTimeout('$("#station_search").submit()', 200);
+      setTimeout('$("#station_search").submit()', 800);
     }
 
 </script>
