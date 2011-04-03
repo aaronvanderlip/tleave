@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:tal="http://xml.zope.org/namespaces/tal">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>TLeave</title>
+<meta name="keywords" content="python web application mbta commuter rail train schedule" />
+<meta name="description" content="An alternative MBTA Commuter Rail schedule" />
+<link href="${request.application_url}/static/css/reset-fonts-grids.css" rel="stylesheet" type="text/css" />
+<link href="${request.application_url}/static/css/style.css" rel="stylesheet" type="t`ext/css"/>
+<script src="${request.application_url}/static/jquery-1.3.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="${request.application_url}/static/jquery.selectboxes.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+  var empty_request = ${len(request.params)} == 0; 
+
+    $(function(){
+      $('#route').change(function(){
+        selectedroute = $('#route :selected').val();
+        updateStationList(selectedroute);
+      })
+
+      $('#timing').change(function(){
+        timing = $('#timing :selected').val();
+        $('#station_search').submit();
+      })
+
+    }
+    ) 
+
+    //this resets the menu on page load
+    $(function(){
+      $(document).ready(function(){
+        if(empty_request){ 
+          selectedroute = $('#route :selected').val();
+          updateStationList(selectedroute);
+        }
+      })
+    })
+
+    function updateStationList(selectedroute){  
+      $("#stationStart").removeOption(/./);          
+      $("#stationStart").ajaxAddOption('${request.application_url}/stationlist',
+    {sortorder:'O', route:selectedroute});
+      $("#stationEnd").removeOption(/./);          
+      $("#stationEnd").ajaxAddOption('${request.application_url}/stationlist',
+    {sortorder:'I',route:selectedroute});
+      setTimeout('$("#station_search").submit()', 200);
+    }
+
+</script>
+</head>
+<body>
+
+<!-- start header -->
+<div id="logo">
+  <a href="http://tleave.com">
+    <img src="${request.application_url}/static/images/tleave.gif" alt="tleave: Find your next train" />
+  </a>
+</div>
+<!-- end header -->
+<div id="wrapper">
+  <!-- start page -->
+  <div id="page">
+    <!-- start content -->
+    <div id="content">
+    </div>
+    <h2> an alternative MBTA commuter train schedule</h2>
+    <form action="" method="get" id="station_search">
+      <label> choose route </label>
+      <input type="hidden" name="form.submitted" value="true" />
+      <select name="route" id="route">
+        <option tal:repeat="item routes" tal:attributes="value python: item[0]; selected python: str(item[0]) == selectedroute" tal:content="python: item[1] "> </option>
+      </select>
+      <br />
+      <br />
+      <label> current stop </label>
+      <select name="stationStart" id="stationStart">
+        <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationStart" tal:content="python: item.stationname"> </option>
+      </select> 
+      <br />
+      <br />
+      <label> destination </label>
+      <select name="stationEnd" id="stationEnd">
+        <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationEnd" tal:content="python: item.stationname"> </option>
+      </select> 
+      <br />
+      <br />
+      <label> day of the week </label>
+      <select name="timing" id="timing">
+        <option value="S" tal:attributes="selected python: timing == 'S'">Saturday</option>
+        <option value="U" tal:attributes="selected python: timing == 'U'">Sunday</option>
+        <option value="W" tal:attributes="selected python: timing == 'W'">Weekday</option>
+      </select>
+      <br />
+      <br />
+      <input type="submit" class="submit"  value="show trains"/>
+
+    </form>
+
+    <br />
+    <br />
+    <div tal:condition="alerts">  
+      <h4>current service alerts</h4>
+      <p id="alerts" tal:content="structure alerts"></p>
+    </div> 
+    <table class='traintimes' tal:condition="python: len(nexttrain) > 0">
+      <thead tal:condition="python: len(nexttrain) > 0"><tr><th>Leaves <br/> <span class="stationHeader" tal:content="stationStart"></span></th><th>Arrives <br /> <span class="stationHeader" tal:content="stationEnd"></span></th></tr></thead>
+      <tbody>
+        <tr tal:repeat="times nexttrain">
+          <td> 
+            <div class="trainNumber">Train number <span tal:content="python: str(times[0].train_num)">Page text goes here.</span></div> 
+            <span tal:content="python: str(times[0])">Page text goes here.</span> 
+          </td>  
+          <td><span tal:content="python: str(times[1])">Page text goes here.</span></td> 
+        </tr> 
+      </tbody>
+    </table> 
+    <h1 tal:condition="python: len(nexttrain) is 0">No trains for seleced route</h1>
+    <!-- end content -->
+    <div style="clear: both;">&nbsp;</div>
+  </div>
+  <strong> Built with </strong>
+  <br />
+<a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="${request.application_url}/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
+  <p> by <a href="http://avanderlip.com">avanderlip.com</a></p>
+</div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-8151787-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+<!-- end page -->
+</body>
+</html>
