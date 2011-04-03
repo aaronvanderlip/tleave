@@ -8,12 +8,16 @@ README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
-    'repoze.bfg',
-    'SQLAlchemy',
+    'pyramid',
+    'SQLAlchemy==0.5.1',
     'transaction',
     'repoze.tm2',
     'zope.sqlalchemy',
-    'FeedParser'
+    'FeedParser',
+    'beaker',
+    'BeautifulSoup',
+    'pyramid_zcml'
+    'Chameleon<1.9999'
     ]
 
 if sys.version_info[:3] < (2,5,0):

@@ -1,9 +1,10 @@
-<configure xmlns="http://namespaces.repoze.org/bfg">
+<configure xmlns="http://pylonshq.com/pyramid"
+  xmlns:bfg="http://namespaces.repoze.org/bfg">
 
   <!-- this must be included for the view declarations to work -->
-  <include package="repoze.bfg.includes" />
+  <include package="pyramid_zcml" />
 
-  <subscriber for="repoze.bfg.interfaces.INewRequest"
+  <subscriber for="pyramid.interfaces.INewRequest"
     handler=".run.handle_teardown"/>
 
   <route 
@@ -21,12 +22,12 @@
     view_renderer="templates/station.pt"
     />
 
-<route
-  path="stationlist"
-  name="sationlist"
-  view=".views.stationlist"
-  renderer="json"
-  />
+  <route
+    path="stationlist"
+    name="sationlist"
+    view=".views.stationlist"
+    renderer="json"
+    />
 
   <static
     name="static"

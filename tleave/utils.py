@@ -16,9 +16,9 @@ from tleave.models import DBSession
 
 
 from repoze.lru import lru_cache
-import repoze.bfg.settings
+import pyramid.settings
 
-settings = repoze.bfg.settings.get_settings()
+settings = pyramid.settings.get_settings() 
 
 
 cache_opts = {
