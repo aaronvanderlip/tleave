@@ -1,6 +1,7 @@
 import transaction
 
-from repoze.bfg.configuration import Configurator
+from pyramid.configuration import Configurator
+import pyramid_zcml
 from repoze.tm import after_end
 from repoze.tm import isActive
 
@@ -25,6 +26,7 @@ def app(global_config, **settings):
         raise ValueError("No 'db_string' value in application configuration.")
     initialize_sql(db_string)
     config = Configurator(settings=settings)
+    config.include(pyramid_zcml)
     config.begin()
     config.load_zcml(zcml_file)
     config.end()

@@ -128,7 +128,10 @@ select, input, button, textarea, button {
     }
 
 
-
+.submit {
+  width: 20em;
+  height: 3em;
+}
 
 #routeSelector input{
   margin-top:1.5em;
