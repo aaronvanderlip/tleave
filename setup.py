@@ -24,7 +24,7 @@ if sys.version_info[:3] < (2,5,0):
     requires.append('pysqlite')
 
 setup(name='tleave',
-      version='0.1',
+      version='0.2',
       description='tleave',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
@@ -38,6 +38,7 @@ setup(name='tleave',
       url='',
       keywords='web wsgi bfg',
       packages=find_packages(),
+      package_data={'': ['configure.zcml']},
       include_package_data=True,
       zip_safe=False,
       test_suite='tleave',
