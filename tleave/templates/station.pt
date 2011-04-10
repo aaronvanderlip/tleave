@@ -65,7 +65,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
     <!-- start content -->
     <div id="content">
     </div>
-    <h2> an alternative MBTA commuter train schedule</h2>
+    <h2>MBTA train schedule calculator</h2>
     <form action="" method="get" id="station_search">
       <label> choose route </label>
       <input type="hidden" name="form.submitted" value="true" />

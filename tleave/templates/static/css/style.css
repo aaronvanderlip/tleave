@@ -28,6 +28,7 @@ h1 {
  h2  {
    font-size: 3em;
    margin: 1em;	
+   margin-bottom: 2em;
  }
 
 
@@ -43,9 +44,15 @@ h1 {
 
  ol li{list-style-type:inherit; margin-left:2em;}
 
+ #logo{
+   float:left;
+ }
+
+
  #stationStart, #stationEnd, #route{
    width:15em;
-       margin: 0 0 2.5em;
+   margin: 0 0 1em;
+   height: 1.7em;
 }
 
 #mainmenu{
@@ -124,13 +131,13 @@ label{
 
 }
 select, input, button, textarea, button {
-      font: 2em arial,helvetica,clean,sans-serif;
-    }
+  font: 2em arial,helvetica,clean,sans-serif;
+  }
 
 
-.submit {
-  width: 20em;
-  height: 3em;
+  .submit {
+    width: 20em;
+    height: 3em;
 }
 
 #routeSelector input{
