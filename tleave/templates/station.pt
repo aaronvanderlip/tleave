@@ -72,13 +72,13 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 <body >
 
 <!-- start page -->
-<div id="page" data-role="page">
+<div id="train_search" data-role="page">
   <div class="ui-bar ui-bar-c">
     <a href="http://tleave.com">
       <img src="${request.application_url}/static/images/tleave.gif" alt="tleave: Find your next train" />
     </a>
   </div>
-  <form action="" method="get" id="station_search" data-ajax="false">
+  <form action="/#train_times"  method="get" id="station_search" data-ajax="false">
       <label for="route"> choose route </label>
       <input type="hidden" name="form.submitted" value="true" />
       <select name="route" id="route">
@@ -106,6 +106,32 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
   </form>
 
   <br />
+  <br />
+  <strong> Built with </strong>
+  <br />
+  <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="${request.application_url}/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
+  <p> by <a href="http://avanderlip.com">avanderlip.com</a></p>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-8151787-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</div>
+  <br />
+  <div data-role="page" id="train_times">
+  <div class="ui-bar ui-bar-b">
+    <a href="#train_search"  data-theme="a" data-direction="reverse" > Back </a> 
+     
+  </div>
   <div tal:condition="alerts">  
     <h4>current service alerts</h4>
     <p id="alerts" tal:content="structure alerts"></p>
@@ -146,27 +172,8 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
   <h1 tal:condition="python: len(nexttrain) is 0">No trains for seleced route</h1>
   <!-- end content -->
-
-  <br />
-  <br />
-  <strong> Built with </strong>
-  <br />
-  <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="${request.application_url}/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
-  <p> by <a href="http://avanderlip.com">avanderlip.com</a></p>
 </div>
-<script type="text/javascript">
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-8151787-2']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
 <!-- end page -->
 </body>
 </html>
