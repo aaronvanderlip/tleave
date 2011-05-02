@@ -6,9 +6,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 <title>TLeave</title>
 <meta name="keywords" content="python web application mbta commuter rail train schedule" />
 <meta name="description" content="An alternative MBTA Commuter Rail schedule" />
-<link href="${request.application_url}/static/css/reset-fonts-grids.css" rel="stylesheet" type="text/css" />
-<link href="${request.application_url}/static/css/style.css" rel="stylesheet" type="text/css"/>
-<script src="${request.application_url}/static/jquery-1.3.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
 <script src="${request.application_url}/static/jquery.selectboxes.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
@@ -38,91 +36,118 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
       })
     })
 
+    function updatemenu()
+    {
+        var el = $(this);
+          // sort
+            el.selectmenu("refresh");
+          }
+
+
     function updateStationList(selectedroute){  
       $("#stationStart").removeOption(/./);          
       $("#stationStart").ajaxAddOption('${request.application_url}/stationlist',
-    {sortorder:'O', route:selectedroute});
+    {sortorder:'O', route:selectedroute}, false, updatemenu );
+
       $("#stationEnd").removeOption(/./);          
       $("#stationEnd").ajaxAddOption('${request.application_url}/stationlist',
-    {sortorder:'I',route:selectedroute});
-      setTimeout('$("#station_search").submit()', 800);
+    {sortorder:'I',route:selectedroute}, false, updatemenu );
     }
-
+                               
 </script>
-</head>
-<body>
 
-<!-- start header -->
-<div id="logo">
-  <a href="http://tleave.com">
-    <img src="${request.application_url}/static/images/tleave.gif" alt="tleave: Find your next train" />
-  </a>
-</div>
-<!-- end header -->
-<div id="wrapper">
-  <!-- start page -->
-  <div id="page">
-    <!-- start content -->
-    <div id="content">
-    </div>
-    <h2> an alternative MBTA commuter train schedule</h2>
-    <form action="" method="get" id="station_search">
-      <label> choose route </label>
+<script type="text/javascript">
+  $(document).bind("mobileinit", function(){
+  $.mobile.selectmenu.prototype.options.hidePlaceholderMenuItems = false;
+    });
+</script>
+<!-- jquery mobile -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
+<script src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>
+</head>
+<body >
+
+<!-- start page -->
+<div id="page" data-role="page">
+  <div class="ui-bar ui-bar-c">
+    <a href="http://tleave.com">
+      <img src="${request.application_url}/static/images/tleave.gif" alt="tleave: Find your next train" />
+    </a>
+  </div>
+  <form action="" method="get" id="station_search" data-ajax="false">
+      <label for="route"> choose route </label>
       <input type="hidden" name="form.submitted" value="true" />
       <select name="route" id="route">
         <option tal:repeat="item routes" tal:attributes="value python: item[0]; selected python: str(item[0]) == selectedroute" tal:content="python: item[1] "> </option>
       </select>
-      <br />
-      <br />
-      <label> current stop </label>
+
+      <label for="stationStart"> current stop </label>
       <select name="stationStart" id="stationStart">
+
         <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationStart" tal:content="python: item.stationname"> </option>
       </select> 
-      <br />
-      <br />
-      <label> destination </label>
+
+      <label for="stationEnd"> destination </label>
       <select name="stationEnd" id="stationEnd">
         <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationEnd" tal:content="python: item.stationname"> </option>
       </select> 
-      <br />
-      <br />
-      <label> day of the week </label>
+
+      <label for="timing"> day of the week </label>
       <select name="timing" id="timing">
         <option value="S" tal:attributes="selected python: timing == 'S'">Saturday</option>
         <option value="U" tal:attributes="selected python: timing == 'U'">Sunday</option>
         <option value="W" tal:attributes="selected python: timing == 'W'">Weekday</option>
       </select>
-      <br />
-      <br />
-      <input type="submit" class="submit"  value="show trains"/>
+    <input type="submit" data-theme="b" value="show trains"/>
+  </form>
 
-    </form>
+  <br />
+  <div tal:condition="alerts">  
+    <h4>current service alerts</h4>
+    <p id="alerts" tal:content="structure alerts"></p>
+  </div> 
 
-    <br />
-    <br />
-    <div tal:condition="alerts">  
-      <h4>current service alerts</h4>
-      <p id="alerts" tal:content="structure alerts"></p>
-    </div> 
-    <table class='traintimes' tal:condition="python: len(nexttrain) > 0">
-      <thead tal:condition="python: len(nexttrain) > 0"><tr><th>Leaves <br/> <span class="stationHeader" tal:content="stationStart"></span></th><th>Arrives <br /> <span class="stationHeader" tal:content="stationEnd"></span></th></tr></thead>
-      <tbody>
-        <tr tal:repeat="times nexttrain">
-          <td> 
-            <div class="trainNumber">Train number <span tal:content="python: str(times[0].train_num)">Page text goes here.</span></div> 
-            <span tal:content="python: str(times[0])">Page text goes here.</span> 
-          </td>  
-          <td><span tal:content="python: str(times[1])">Page text goes here.</span></td> 
-        </tr> 
-      </tbody>
-    </table> 
-    <h1 tal:condition="python: len(nexttrain) is 0">No trains for seleced route</h1>
-    <!-- end content -->
-    <div style="clear: both;">&nbsp;</div>
+  <div class='ui-grid-a' tal:condition="python: len(nexttrain) > 0">
+
+    <div class="ui-block-a">
+      <h3>Leaves from
+
+        <span class="stationHeader" tal:content="stationStart"></span>
+      </h3>
+    </div>
+    <div class="ui-block-b">
+
+      <h3> Arrives at
+
+        <span class="stationHeader" tal:content="stationEnd"></span>
+      </h3>
+    </div>
+
+    <div tal:repeat="times nexttrain">
+      <div class="ui-block-a">
+        <div class="ui-bar ui-bar-b" style="height:50px">
+
+          <div class="trainNumber">Train number <span tal:content="python: str(times[0].train_num)">Page text goes here.</span></div> 
+          <span tal:content="python: str(times[0])">Page text goes here.</span> 
+        </div>
+      </div>
+      <div class="ui-block-b">
+        <div class="ui-bar ui-bar-b" style="height:50px"> 
+          <span tal:content="python: str(times[1])">Page text goes here.</span> 
+        </div>
+      </div>
+    </div>       
   </div>
+
+
+  <h1 tal:condition="python: len(nexttrain) is 0">No trains for seleced route</h1>
+  <!-- end content -->
+
+  <br />
+  <br />
   <strong> Built with </strong>
   <br />
-<a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="${request.application_url}/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
+  <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="${request.application_url}/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
   <p> by <a href="http://avanderlip.com">avanderlip.com</a></p>
 </div>
 <script type="text/javascript">
@@ -138,8 +163,6 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
   })();
 
 </script>
-
-
 <!-- end page -->
 </body>
 </html>
