@@ -157,8 +157,9 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
       <div class="ui-block-a">
         <div class="ui-bar ui-bar-b" style="height:50px">
 
-          <div class="trainNumber">Train number <span tal:content="python: str(times[0].train_num)">Page text goes here.</span></div> 
           <span tal:content="python: str(times[0])">Page text goes here.</span> 
+
+          <div class="trainNumber" style="font-size:75%; margin-top:10px; ">Train number <span tal:content="python: str(times[0].train_num)">Page text goes here.</span></div> 
         </div>
       </div>
       <div class="ui-block-b">
