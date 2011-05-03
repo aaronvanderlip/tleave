@@ -12,6 +12,15 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
   var empty_request = ${len(request.params)} == 0; 
 
+    
+    $(function(){
+      $('#station_search').click(function(){
+        $.mobile.pageLoading();
+      })
+
+
+    })
+
     $(function(){
       $('#route').change(function(){
         selectedroute = $('#route :selected').val();
