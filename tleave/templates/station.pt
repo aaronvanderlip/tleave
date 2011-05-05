@@ -137,6 +137,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
   <div class="ui-bar ui-bar-b">
     <a href="#train_search"  data-theme="a" data-direction="reverse" > Back </a> 
 
+
   </div>
   <div tal:condition="alerts">  
     <h4>current service alerts</h4>
@@ -145,18 +146,21 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
   <div class='ui-grid-a' tal:condition="python: len(nexttrain) > 0">
 
+      <h2  tal:condition="python: timing == 'S'">Saturday Schedule</h2>
+      <h2  tal:condition="python: timing == 'U'">Sunday Schedule</h2>
+      <h2  tal:condition="python: timing == 'W'">Weekday Schedule</h2>
     <div class="ui-block-a">
-      <h3>Leaves from
-
+      <h4>Leaves from
+        <br />
         <span class="stationHeader" tal:content="stationStart"></span>
-      </h3>
+      </h4>
     </div>
     <div class="ui-block-b">
 
-      <h3> Arrives at
-
+      <h4> Arrives at
+        <br />
         <span class="stationHeader" tal:content="stationEnd"></span>
-      </h3>
+      </h4>
     </div>
 
     <div tal:repeat="times nexttrain">
