@@ -12,13 +12,11 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
   var empty_request = ${len(request.params)} == 0; 
 
-    
+
     $(function(){
       $('#station_search').click(function(){
         $.mobile.pageLoading();
       })
-
-
     })
 
     $(function(){
@@ -32,7 +30,6 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
         timing = $('#timing :selected').val();
         setTimeout('$("#station_search").submit()', 800);
       })
-
     }
     ) 
 
@@ -48,16 +45,16 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
     function updatemenu()
     {
-        var el = $(this);
-          // sort
-            el.selectmenu("refresh");
-          }
+      var el = $(this);
+      // sort
+      el.selectmenu("refresh");
+      if( el[0].id == 'stationEnd'){
+        $("#show_trains").button("enable");
+      }
+    }
 
 
     function updateStationList(selectedroute){  
-      //disable
-
-      $("#show_trains").button("refresh");
       $("#stationStart").removeOption(/./);          
       $("#stationStart").ajaxAddOption('${request.application_url}/stationlist',
     {sortorder:'O', route:selectedroute}, false, updatemenu );
@@ -65,16 +62,14 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
       $("#stationEnd").removeOption(/./);          
       $("#stationEnd").ajaxAddOption('${request.application_url}/stationlist',
     {sortorder:'I',route:selectedroute}, false, updatemenu );
-      //reenable
-      $("#show_trains").button("enable");
     }
-                               
+
 </script>
 
 <script type="text/javascript">
   $(document).bind("mobileinit", function(){
-  $.mobile.selectmenu.prototype.options.hidePlaceholderMenuItems = false;
-    });
+    $.mobile.selectmenu.prototype.options.hidePlaceholderMenuItems = false;
+  });
 </script>
 <!-- jquery mobile -->
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
@@ -90,29 +85,29 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
     </a>
   </div>
   <form action="/#train_times"  method="get" id="station_search" data-ajax="false">
-      <label for="route"> choose route </label>
-      <input type="hidden" name="form.submitted" value="true" />
-      <select name="route" id="route">
-        <option tal:repeat="item routes" tal:attributes="value python: item[0]; selected python: str(item[0]) == selectedroute" tal:content="python: item[1] "> </option>
-      </select>
+    <label for="route"> choose route </label>
+    <input type="hidden" name="form.submitted" value="true" />
+    <select name="route" id="route">
+      <option tal:repeat="item routes" tal:attributes="value python: item[0]; selected python: str(item[0]) == selectedroute" tal:content="python: item[1] "> </option>
+    </select>
 
-      <label for="stationStart"> current stop </label>
-      <select name="stationStart" id="stationStart">
+    <label for="stationStart"> current stop </label>
+    <select name="stationStart" id="stationStart">
 
-        <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationStart" tal:content="python: item.stationname"> </option>
-      </select> 
+      <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationStart" tal:content="python: item.stationname"> </option>
+    </select> 
 
-      <label for="stationEnd"> destination </label>
-      <select name="stationEnd" id="stationEnd">
-        <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationEnd" tal:content="python: item.stationname"> </option>
-      </select> 
+    <label for="stationEnd"> destination </label>
+    <select name="stationEnd" id="stationEnd">
+      <option tal:repeat="item stationpages" tal:attributes="value python: item.stationname; selected python: item.stationname == stationEnd" tal:content="python: item.stationname"> </option>
+    </select> 
 
-      <label for="timing"> day of the week </label>
-      <select name="timing" id="timing">
-        <option value="S" tal:attributes="selected python: timing == 'S'">Saturday</option>
-        <option value="U" tal:attributes="selected python: timing == 'U'">Sunday</option>
-        <option value="W" tal:attributes="selected python: timing == 'W'">Weekday</option>
-      </select>
+    <label for="timing"> day of the week </label>
+    <select name="timing" id="timing">
+      <option value="S" tal:attributes="selected python: timing == 'S'">Saturday</option>
+      <option value="U" tal:attributes="selected python: timing == 'U'">Sunday</option>
+      <option value="W" tal:attributes="selected python: timing == 'W'">Weekday</option>
+    </select>
     <input type="submit" data-theme="b" value="show trains" id="show_trains"/>
   </form>
 
@@ -122,26 +117,26 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
   <br />
   <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="${request.application_url}/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
   <p> by <a href="http://avanderlip.com">avanderlip.com</a></p>
-<script type="text/javascript">
+  <script type="text/javascript">
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-8151787-2']);
-  _gaq.push(['_trackPageview']);
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8151787-2']);
+    _gaq.push(['_trackPageview']);
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
 
-</script>
+  </script>
 
 </div>
-  <br />
-  <div data-role="page" id="train_times">
+<br />
+<div data-role="page" id="train_times">
   <div class="ui-bar ui-bar-b">
     <a href="#train_search"  data-theme="a" data-direction="reverse" > Back </a> 
-     
+
   </div>
   <div tal:condition="alerts">  
     <h4>current service alerts</h4>
