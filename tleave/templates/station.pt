@@ -14,7 +14,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
 
     $(function(){
-      $('#station_search').click(function(){
+      $('#station_search').submit(function(){
         $.mobile.pageLoading();
       })
     })
@@ -28,7 +28,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
       $('#timing').change(function(){
         timing = $('#timing :selected').val();
-        setTimeout('$("#station_search").submit()', 800);
+        $("#station_search").submit();
       })
     }
     ) 
