@@ -24,6 +24,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
     $(function(){
       $('#route').change(function(){
         selectedroute = $('#route :selected').val();
+        $("#show_trains").button("disable");
         updateStationList(selectedroute);
       })
 
@@ -55,7 +56,8 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
     function updateStationList(selectedroute){  
       //disable
-      $("#show_trains").button("disable");
+
+      $("#show_trains").button("refresh");
       $("#stationStart").removeOption(/./);          
       $("#stationStart").ajaxAddOption('${request.application_url}/stationlist',
     {sortorder:'O', route:selectedroute}, false, updatemenu );
