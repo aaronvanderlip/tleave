@@ -116,7 +116,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
   <strong> Built with </strong>
   <br />
   <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="${request.application_url}/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
-  <p> by <a href="http://avanderlip.com">avanderlip.com</a></p>
+  <p> by <a href="http://ruralmind.org">ruralmind.org</a></p>
   <script type="text/javascript">
 
     var _gaq = _gaq || [];
