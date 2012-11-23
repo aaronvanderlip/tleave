@@ -7,7 +7,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 <meta name="keywords" content="python web application mbta commuter rail train schedule" />
 <meta name="description" content="An alternative MBTA Commuter Rail schedule" />
 <script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
-<script src="${request.application_url}/static/jquery.selectboxes.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/jquery.selectboxes.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
   var empty_request = ${len(request.params)} == 0; 
@@ -56,11 +56,11 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
     function updateStationList(selectedroute){  
       $("#stationStart").removeOption(/./);          
-      $("#stationStart").ajaxAddOption('${request.application_url}/stationlist',
+      $("#stationStart").ajaxAddOption('/stationlist',
     {sortorder:'O', route:selectedroute}, false, updatemenu );
 
       $("#stationEnd").removeOption(/./);          
-      $("#stationEnd").ajaxAddOption('${request.application_url}/stationlist',
+      $("#stationEnd").ajaxAddOption('/stationlist',
     {sortorder:'I',route:selectedroute}, false, updatemenu );
     }
 
@@ -81,7 +81,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 <div id="train_search" data-role="page">
   <div class="ui-bar ui-bar-c">
     <a href="http://tleave.com">
-      <img src="${request.application_url}/static/images/tleave.gif" alt="tleave: Find your next train" />
+      <img src="/static/images/tleave.gif" alt="tleave: Find your next train" />
     </a>
   </div>
   <form action="/#train_times"  method="get" id="station_search" data-ajax="false">
@@ -115,7 +115,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
   <br />
   <strong> Built with </strong>
   <br />
-  <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="${request.application_url}/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
+  <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
   <p> by <a href="http://ruralmind.org">ruralmind.org</a></p>
   <script type="text/javascript">
 

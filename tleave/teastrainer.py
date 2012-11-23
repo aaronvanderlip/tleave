@@ -10,7 +10,7 @@ def getSchedule(route='NBRYROCK', direction='O', timing='W'):
     html = response.read()
     soup = BeautifulSoup(html)
     try:
-        links = soup.table.nextSibling
+        links = soup.table
         return stations(links)
     except AttributeError:
         return  None
@@ -29,7 +29,7 @@ def stations(links):
     links = links.findAll('tr')
     stationorder = 0
     for row in links:
-        stationlist = row.findAll('td', 'hidden')
+        stationlist = row.findAll('u')
         try:
              station = stationlist[0].renderContents()
         #set the train number using stationorder     
@@ -39,13 +39,11 @@ def stations(links):
                 times = cleanTimeTables(row, train_numbers)
                 stationtimes.setdefault(station,(times,stationorder))
         stationorder += 1
+        print stationtimes
     return stationtimes
 
 def cleanTimeTables(row, train_numbers):
     cleantimes =[]
-    #remove the station
-    remove = row.find('td')
-    remove.extract()
     row = row.findAll('td')
     
     #assume that we are at the 0 column for appending train numbers as they are

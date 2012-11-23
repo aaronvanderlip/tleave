@@ -58,7 +58,7 @@ db_string = settings['db_string']
 metadata = MetaData()
 
 def importAllSchedules():
-    #print "Dropping tables"
+    print "Dropping tables"
     #repeating ourselves
     engine = create_engine(db_string)
     DBSession.configure(bind=engine)
@@ -67,6 +67,7 @@ def importAllSchedules():
 
     metadata.drop_all(engine)
     for route in ROUTES:
+        print route
         for direction in DIRECTIONS:
             for timing in TIMING:
                 importSchedule(route,direction,timing)
@@ -100,7 +101,7 @@ def importSchedule(route, direction, timing):
     """this should go in another library, but its purpose
        is to populate the database"""
     
-    #print "Creating tables"
+    print "Creating tables"
 
     engine = create_engine(db_string)
     DBSession.configure(bind=engine)
@@ -111,6 +112,7 @@ def importSchedule(route, direction, timing):
     if schedulelist is not None:
         #FIXME it is not really 'time' here is it?
         for name,time in schedulelist.iteritems():
+            print name
             station = models.Station('','','')
             station.stationname = name
             station.routeorder = time[1]
@@ -118,6 +120,7 @@ def importSchedule(route, direction, timing):
             station.direction = direction
             #timing should be replaced with schedule to make consistent
             station.timing = timing 
+            print timing
             station.timetable = [models.TimeTable(time = stop['time'], train_num = stop['train_num']) for stop in parseToDateTime(time[0])]
             models.DBSession.add(station)
             transaction.commit()
