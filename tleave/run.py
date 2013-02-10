@@ -1,34 +1,32 @@
-import transaction
+from pyramid.config import Configurator
+from pyramid.renderers import JSON
+from sqlalchemy import engine_from_config
 
-from pyramid.configuration import Configurator
-import pyramid_zcml
-from repoze.tm import after_end
-from repoze.tm import isActive
+from tleave.views import stationlist, index, import_schedule
+from tleave.models import (
+    DBSession,
+    Base,
+    )
 
-from tleave.models import DBSession
-from tleave.models import initialize_sql
-
-def handle_teardown(event):
-    environ = event.request.environ
-    if isActive(environ):
-        t = transaction.get()
-        after_end.register(DBSession.remove, t)
 
 def app(global_config, **settings):
     """ This function returns a WSGI application.
-    
-    It is usually called by the PasteDeploy framework during 
+
+    It is usually called by the PasteDeploy framework during
     ``paster serve``.
     """
-    zcml_file = settings.get('configure_zcml', 'configure.zcml')
-    db_string = settings.get('db_string')
-    if db_string is None:
-        raise ValueError("No 'db_string' value in application configuration.")
-    initialize_sql(db_string)
+    engine = engine_from_config(settings, 'sqlalchemy.')
+    DBSession.configure(bind=engine)
+    Base.metadata.bind = engine
     config = Configurator(settings=settings)
-    config.include(pyramid_zcml)
     config.begin()
-    config.load_zcml(zcml_file)
+    config.add_route('home', '/')
+    config.add_view(index, route_name='home')
+    config.add_route('import', 'import')
+    config.add_view(import_schedule, route_name='import')
+    config.add_renderer('stationjson', JSON(indent=4))
+    config.add_route('stationlist', 'stationlist/')
+    config.add_view(stationlist, route_name='stationlist', renderer='stationjson')
+    config.add_static_view('static', 'templates/static')
     config.end()
     return config.make_wsgi_app()
-

@@ -9,7 +9,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'pyramid',
-    'SQLAlchemy==0.5.1',
+    'SQLAlchemy==0.7.9',
     'transaction',
     'repoze.tm2',
     'zope.sqlalchemy',

@@ -9,6 +9,7 @@ def getSchedule(route='NBRYROCK', direction='O', timing='W'):
     response = urllib2.urlopen(url)
     html = response.read()
     soup = BeautifulSoup(html)
+    import ipdb; ipdb.set_trace()
     try:
         links = soup.table
         return stations(links)
