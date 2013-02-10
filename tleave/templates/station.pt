@@ -56,11 +56,11 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 
     function updateStationList(selectedroute){  
       $("#stationStart").removeOption(/./);          
-      $("#stationStart").ajaxAddOption('/stationlist',
+      $("#stationStart").ajaxAddOption('/stationlist/',
     {sortorder:'O', route:selectedroute}, false, updatemenu );
 
       $("#stationEnd").removeOption(/./);          
-      $("#stationEnd").ajaxAddOption('/stationlist',
+      $("#stationEnd").ajaxAddOption('/stationlist/',
     {sortorder:'I',route:selectedroute}, false, updatemenu );
     }
 

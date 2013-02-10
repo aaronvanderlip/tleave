@@ -12,14 +12,14 @@ from sqlalchemy import create_engine
 
 from teastrainer import getSchedule
 from tleave import models
-from tleave.models import DBSession
+from tleave.models import DBSession, Base
 
 
 from repoze.lru import lru_cache
-import pyramid.settings
+import pyramid
 
-settings = pyramid.settings.get_settings() 
 
+settings = pyramid.threadlocal.get_current_registry().settings
 
 cache_opts = {
     'cache.type': 'file',
@@ -54,41 +54,38 @@ __all__ = ['setup_app']
 LOG = logging.getLogger(__name__)
 
 from sqlalchemy import MetaData
-db_string = settings['db_string']
+#db_string = settings['db_string']
+db_string = 1
 metadata = MetaData()
+
 
 def importAllSchedules():
     print "Dropping tables"
-    #repeating ourselves
-    engine = create_engine(db_string)
-    DBSession.configure(bind=engine)
-    metadata.bind = engine
-
-
-    metadata.drop_all(engine)
+    Base.metadata.drop_all()
     for route in ROUTES:
         print route
         for direction in DIRECTIONS:
             for timing in TIMING:
-                importSchedule(route,direction,timing)
+                importSchedule(route, direction, timing)
 
 
 @cache.cache('service_alerts', expire=300)
 def get_alerts(route):
-    
-    feed =  'http://talerts.com/rssfeed/alertsrss.aspx?%s' % route
+
+    feed = 'http://talerts.com/rssfeed/alertsrss.aspx?%s' % route
     parser = feedparser.parse(feed)
     try:
-       results = parser['entries'][0].summary_detail['value']
+        results = parser['entries'][0].summary_detail['value']
 
     except IndexError:
-       results = None 
+        results = None
 
     finally:
-       return results       
+        return results
+
 
 def getTiming():
-    currenttime = datetime.now()     
+    currenttime = datetime.now()
     timing = 'W'
 
     if currenttime.isoweekday() == 7:
@@ -100,31 +97,26 @@ def getTiming():
 def importSchedule(route, direction, timing):
     """this should go in another library, but its purpose
        is to populate the database"""
-    
-    print "Creating tables"
 
-    engine = create_engine(db_string)
-    DBSession.configure(bind=engine)
-    metadata.bind = engine
-    metadata.create_all(engine)
-    
+    print "Creating tables"
     schedulelist = getSchedule(route=route, direction=direction, timing=timing)
+
     if schedulelist is not None:
         #FIXME it is not really 'time' here is it?
-        for name,time in schedulelist.iteritems():
+        for name, time in schedulelist.iteritems():
             print name
-            station = models.Station('','','')
+            station = models.Station('', '', '')
             station.stationname = name
             station.routeorder = time[1]
             station.route = route
             station.direction = direction
             #timing should be replaced with schedule to make consistent
-            station.timing = timing 
+            station.timing = timing
             print timing
             station.timetable = [models.TimeTable(time = stop['time'], train_num = stop['train_num']) for stop in parseToDateTime(time[0])]
-            models.DBSession.add(station)
+            DBSession.add(station)
             transaction.commit()
-     
+
 
 def parseToDateTime(timetable):
     """convert time table to list of datetimes, corrected for 24 clock"""
@@ -132,37 +124,37 @@ def parseToDateTime(timetable):
     pm = False
     prev = None
     for stop in timetable:
-        
-        try: 
+
+        try:
             #just need the hour to calculate
-            time = datetime.strptime(stop['time'], '%I:%M')       
+            time = datetime.strptime(stop['time'], '%I:%M')
             if prev is None:
-                prev = time 
-      
+                prev = time
+
             #check to see if the 12 hour mark has been passed
             if time < prev and not pm:
-                pm = True  
-                    
+                pm = True
+
             if not pm:
                 stop['time'] = time
                 datetimetable.append(stop)
-                     
-            else:        
+
+            else:
                 time = time + timedelta(hours = 12)
                 #check to see if adding 12 hours wraps for trains arriving/leaving the next day
                 if time < prev:
-                    time = time + timedelta(hours = 12)                                    
+                    time = time + timedelta(hours = 12)
                 stop['time'] = time
                 datetimetable.append(stop)
-                
+
             prev = stop['time']
-        #should these be converted to NULL?    
+        #should these be converted to NULL?
         except ValueError:
             stop['time'] = None
             datetimetable.append(stop)
-              
+
     return datetimetable
-            
+
 
 @lru_cache(500)
 def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
@@ -171,28 +163,28 @@ def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
     currenttime = datetime.now()
     now = datetime(year=1900, month=1, day=1, hour=currenttime.hour, minute=currenttime.minute)
     starttimes =[]
-    endtimes = []    
+    endtimes = []
 
     try:
         start = DBSession.query(models.Station).filter(models.Station.stationname==stationStart).filter(models.Station.route==route).filter(models.Station.direction==direction).filter(models.Station.timing==timing).one()
         end = DBSession.query(models.Station).filter(models.Station.stationname==stationEnd).filter(models.Station.route==route).filter(models.Station.direction==direction).filter(models.Station.timing==timing).one()
     except NoResultFound:
-        return [] 
-    
-    # find the times the time table looking forward from now 
+        return []
+
+    # find the times the time table looking forward from now
     for time in start.timetable:
-        try: 
+        try:
             starttimes.append(time.time)
         except TypeError:
             pass
-    
+
     for time in end.timetable:
-        try: 
+        try:
             endtimes.append(time.time)
         except TypeError:
             pass
-    
-    # this needs to be refactored 
+
+    # this needs to be refactored
     # each station has a timetable referenced to it
     cleanstarts = [stop.time for stop in start.timetable]
     cleanends = [stop.time for stop in end.timetable]
@@ -206,18 +198,18 @@ def nextTrain(stationStart,stationEnd, route, timing, direction='I'):
 
     s1 = Set(startindexes)
     s2 = Set(endindexes)
-    
+
     intersect = s1.intersection(s2)
-    
+
     idlist = list(intersect)
     idlist.sort()
     startTrainTimes = [(start.timetable[n], end.timetable[n]) for n in idlist]
-    results = startTrainTimes 
+    results = startTrainTimes
     return results
-    
+
 @cache.cache('determine_direction_results', expire=3600)
-def determineDirection(stationStart,stationEnd, route): 
-    """determines the direction of travel based on start and end station""" 
+def determineDirection(stationStart,stationEnd, route):
+    """determines the direction of travel based on start and end station"""
     start = DBSession.query(models.Station).filter(models.Station.stationname==stationStart).filter(models.Station.route==route).filter(models.Station.direction=='I')
     end = DBSession.query(models.Station).filter(models.Station.stationname==stationEnd).filter(models.Station.route==route).filter(models.Station.direction=='I')
 
@@ -226,7 +218,7 @@ def determineDirection(stationStart,stationEnd, route):
         if start[0].routeorder < end[0].routeorder:
             return 'I'
         else:
-            return 'O' 
+            return 'O'
     else:
         return 'O'
 
@@ -238,4 +230,4 @@ def scheduleIntegrity():
             print station
             print len(station.timetable)
 
-            
+
