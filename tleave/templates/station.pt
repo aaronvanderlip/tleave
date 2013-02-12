@@ -27,10 +27,6 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
         updateStationList(selectedroute);
       })
 
-      $('#timing').change(function(){
-        timing = $('#timing :selected').val();
-        $("#station_search").submit();
-      })
     }
     ) 
 
@@ -81,7 +77,7 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
 <!-- start page -->
 <div id="train_search" data-role="page">
   <div data-role="content">
-  <div class="ui-bar ui-bar-c">
+  <div>
     <a href="http://tleave.com">
       <img src="/static/images/tleave.gif" alt="tleave: Find your next train" />
     </a>
@@ -110,14 +106,16 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
       <option value="U" tal:attributes="selected python: timing == 'U'">Sunday</option>
       <option value="W" tal:attributes="selected python: timing == 'W'">Weekday</option>
     </select>
-    <input type="submit" data-theme="b" value="show trains" id="show_trains"/>
+    <input type="submit" data-icon="search" data-theme="b" value="show trains" id="show_trains"/>
   </form>
 
-  <br />
-  <br />
-  <strong> Built with </strong>
-  <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
-   by <a href="http://ruralmind.org">ruralmind.org</a>
+<br />
+<br />
+  <div class="">
+  <a data-role="button" data-theme="a" href="#about">about</a>
+ </div>
+
+
   <script type="text/javascript">
 
     var _gaq = _gaq || [];
@@ -131,26 +129,39 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
     })();
 
   </script>
+</div>
+</div>
 
+<div data-role="page" id="about">
+  <div class="ui-bar ui-bar-b">
+    <a href="#train_search" data-role="button" data-mine="true" data-theme="a" data-direction="reverse" > Back </a> 
+  </div>
+<div data-role="content">
+  <strong> Built with </strong>
+  <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
+  <br />
+  <br />
+   by <a href="http://ruralmind.org">ruralmind.org</a>
 </div>
 </div>
-<br />
+
+
+
 <div data-role="page" id="train_times">
   <div class="ui-bar ui-bar-b">
     <a href="#train_search" data-role="button" data-mine="true" data-theme="a" data-direction="reverse" > Back </a> 
-
   </div>
 <div data-role="content">
   <div tal:condition="alerts">  
     <h4>current service alerts</h4>
     <p id="alerts" tal:content="structure alerts"></p>
   </div> 
-
-  <div class='ui-grid-a' tal:condition="python: len(nexttrain) > 0">
-
+  <div tal:condition="python: len(nexttrain) > 0">
       <h2  tal:condition="python: timing == 'S'">Saturday Schedule</h2>
       <h2  tal:condition="python: timing == 'U'">Sunday Schedule</h2>
       <h2  tal:condition="python: timing == 'W'">Weekday Schedule</h2>
+
+  <div class='ui-grid-a'>
     <div class="ui-block-a">
       <h4>Leaves from
         <br />
@@ -165,7 +176,6 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
       </h4>
     </div>
     </div>
-
   <div class='ui-grid-a' tal:condition="python: len(nexttrain) > 0">
     <tal tal:repeat="times nexttrain">
       <div class="ui-block-a">
@@ -182,14 +192,12 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
         </div>
       </div>
     </tal>       
-  </div>
-
-
+  </div> 
+  </div> 
   <h1 tal:condition="python: len(nexttrain) is 0">No trains for seleced route</h1>
   <!-- end content -->
 </div>
 </div>
-
 <!-- end page -->
 </body>
 </html>
