@@ -62,6 +62,7 @@ metadata = MetaData()
 def importAllSchedules():
     print "Dropping tables"
     Base.metadata.drop_all()
+    Base.metadata.create_all()
     for route in ROUTES:
         print route
         for direction in DIRECTIONS:
