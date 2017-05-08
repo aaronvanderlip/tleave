@@ -8,15 +8,15 @@ README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
-    'pyramid',
+    'pyramid==1.4',
     'SQLAlchemy==0.7.9',
-    'transaction',
-    'repoze.tm2',
-    'zope.sqlalchemy',
-    'FeedParser',
-    'beaker',
-    'BeautifulSoup',
-    'pyramid_zcml',
+    'transaction==2.1.2',
+    'repoze.tm2==2.1',
+     'zope.schema==4.4.2',
+    'feedparser==5.2.1',
+    'Beaker==1.8.1',
+    'BeautifulSoup==3.2.1',
+    'pyramid-zcml==1.0.0',
     'Chameleon<1.9999'
     ]
 
@@ -24,7 +24,7 @@ if sys.version_info[:3] < (2,5,0):
     requires.append('pysqlite')
 
 setup(name='tleave',
-      version='0.2',
+      version='0.3',
       description='tleave',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[

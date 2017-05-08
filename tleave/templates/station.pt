@@ -141,7 +141,9 @@ xmlns:tal="http://xml.zope.org/namespaces/tal">
   <a href="http://docs.pylonsproject.org/projects/pyramid/dev/#"><img src="/static/images/pyramid-small.png" alt="Pyramid web framework. Not built by aliens" /></a>
   <br />
   <br />
-   by <a href="http://ruralmind.org">ruralmind.org</a>
+   by <a href="http://notabot.org">notabot.org</a>
+   <br />
+   source <a href="https://github.com/aaronvanderlip/tleave">https://github.com/aaronvanderlip/tleave</a>
 </div>
 </div>
 
