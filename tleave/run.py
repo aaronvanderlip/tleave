@@ -21,8 +21,8 @@ def app(global_config, **settings):
     config = Configurator(settings=settings)
     config.begin()
     config.add_route('home', '/')
-    config.add_route('import', 'import')
-    config.add_view(import_schedule, route_name='import')
+    #config.add_route('import', 'import')
+    #config.add_view(import_schedule, route_name='import')
 
     config.add_renderer('stationjson', JSON(indent=4))
     config.add_route('stationlist', 'stationlist/')
