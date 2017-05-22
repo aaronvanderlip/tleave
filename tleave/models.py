@@ -15,15 +15,14 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 metadata = MetaData()
 
+
 class Station (Base):
     __tablename__ = 'station'
     metadata
     id = Column(Integer, primary_key=True)
-    #need station order
-    #need line that it belongs to
     routeorder = Column(Integer)
     stationname = Column(Text)
-    #is this even being used
+    # Is this even being used?
     route = Column(Text)
     timing = Column(Text, nullable=True)
     direction = Column(Text, nullable=True)
@@ -32,7 +31,7 @@ class Station (Base):
     def __init__(self, stationname, routeorder, direction):
         self.stationname = stationname
         self.routeorder = routeorder
-        #need to be fixed when import is fixed
+        # Needs to be fixed when import is fixed
         self.direction = direction
 
 
@@ -57,5 +56,4 @@ class TimeTable (Base):
         except AttributeError:
             time = '  No Train  '
         return time
-
 

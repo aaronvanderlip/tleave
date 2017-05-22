@@ -6,7 +6,7 @@ from tleave.views import stationlist, import_schedule
 from tleave.models import (
     DBSession,
     Base,
-    )
+)
 
 
 def app(global_config, **settings):
